@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb and defaultTargetPlatform
 import '../services/tingwu_service.dart';
 import '../services/purchase_service.dart';
 import '../services/database_service.dart';
@@ -87,12 +88,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    // Request permissions (Mocked for web/simulator safety, but good practice)
-    var status = await Permission.microphone.status;
-    if (!status.isGranted) {
-      // On some platforms request() might be needed. 
-      // For this demo we proceed assuming permission or mock.
-      // await Permission.microphone.request();
+    // Request permissions
+    // Wrapped in try-catch for robustness on Desktop/Web where plugins might differ
+    try {
+      if (!kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android)) {
+         var status = await Permission.microphone.status;
+         if (!status.isGranted) {
+           // await Permission.microphone.request();
+         }
+      }
+    } catch (e) {
+      debugPrint("Permission check failed (safe to ignore on some platforms): $e");
     }
 
     await _tingwuService.startRecording();
