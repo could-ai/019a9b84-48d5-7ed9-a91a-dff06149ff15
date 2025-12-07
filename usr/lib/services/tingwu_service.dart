@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:math';
+import 'package:flutter/foundation.dart';
 
 /// This service simulates the Alibaba Cloud Tingwu (Tongyi Tingwu) SDK integration.
 /// 
-/// REAL INTEGRATION GUIDE:
-/// 1. Download the Alibaba Cloud NUI SDK (Android/iOS) from the link you provided.
-/// 2. Place the .aar (Android) and .framework (iOS) files in the respective platform folders.
-/// 3. Use MethodChannels to pass audio data from Flutter to the Native SDK.
-/// 
-/// Since we cannot download external binary SDKs in this environment, 
-/// this service MOCKS the behavior so you can see the UI and logic working.
+/// ⚠️ PUBLISHING NOTICE ⚠️
+/// This is a MOCK implementation. For a production app, you must:
+/// 1. Download the real Alibaba Cloud NUI SDK (Android/iOS).
+/// 2. Implement MethodChannels in android/ and ios/ folders.
+/// 3. Replace this mock logic with actual calls to the native SDK.
 class TingwuService {
   final StreamController<String> _transcriptionController = StreamController<String>.broadcast();
   final StreamController<String> _translationController = StreamController<String>.broadcast();
@@ -47,10 +45,11 @@ class TingwuService {
     if (_isListening) return;
     _isListening = true;
     
-    // In a real app, you would start the microphone and send audio to Alibaba SDK here.
-    // await _channel.invokeMethod('startTingwu');
+    // TODO: INTEGRATION POINT
+    // In the real app, call the native method channel here:
+    // await MethodChannel('com.example.tingwu').invokeMethod('startRecording');
 
-    print("Tingwu Service: Started Recording (Mock)");
+    debugPrint("Tingwu Service: Started Recording (Mock Mode)");
 
     // Simulate receiving data
     int index = 0;
@@ -73,10 +72,10 @@ class TingwuService {
     _isListening = false;
     _mockTimer?.cancel();
     
-    // In a real app:
-    // await _channel.invokeMethod('stopTingwu');
+    // TODO: INTEGRATION POINT
+    // await MethodChannel('com.example.tingwu').invokeMethod('stopRecording');
     
-    print("Tingwu Service: Stopped Recording");
+    debugPrint("Tingwu Service: Stopped Recording");
   }
 
   void dispose() {
